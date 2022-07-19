@@ -24,8 +24,7 @@
     </h4>
     <p>Design by <a href="https://github.com/rootmelo92118">Kitayama Shouko</a></p>
     <script>
-    var err = "";
-    var errRandom = new Array("Your location is still not fetched from the browser.\nPlease try again later.","Your location is still not fetched from the browser yet.\nPlease try again later.","Your location is fetching from the browser.\nPlease try again later.")
+      var err = "";
       getGeoLocation();
       function getAPIKey() {
         var key = document.getElementById("APIKey").value;
@@ -68,7 +67,7 @@
       function initMap() {
         var location = setLocation;
         if (JSON.stringify(setLocation) == '{}'){
-            err = errRandom[Math.floor(Math.random()*errRandom.length)];
+            err = "Your location is still not fetched from the browser.\nPlease try again later.";
             location = {lat: 25.0846814, lng: 121.5455938};
         }
         if ((location["lat"] != 25.0846814) || (location["lng"] != 121.5455938)){
@@ -76,7 +75,7 @@
         }
         if (err != ""){
             alert(err);
-            if ((err != "Your location is still not fetched from the browser.\nPlease try again later.") && (err != "Your location is still not fetched from the browser yet.\nPlease try again later.") && (err != "Your location is fetching from the browser.\nPlease try again later.")){
+            if (err != "Your location is still not fetched from the browser.\nPlease try again later."){
                 err = "";
             }
         }
