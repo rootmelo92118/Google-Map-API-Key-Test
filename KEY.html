@@ -17,10 +17,16 @@
     <p>Google API Key : <input type="text" id="APIKey"></p>
     <button onclick="getAPIKey()">Test your API key</button>
     <div id="map"></div>
-    <p>It can display where you are if you allow this website to get your location from your browser.</p>
+    <h4>
+        It can display where you are if you allow this website to get your location from your browser.<br>
+        If you denied the request to get your information on Geolocation or get any kind of error, we will set the location on Shih Chien University, Taipei campus.<br>
+        It means your key is valid if you didn't get "For development proposes only" or "Oops! Something went wrong".
+    </h4>
     <p>Design by <a href="https://github.com/rootmelo92118">Kitayama Shouko</a></p>
     <script>
-      navigator.geolocation.getCurrentPosition(returnPosition,exceptipn);
+    var err = "";
+    var errRandom = new Array("Your location is still not fetched from the browser.\nPlease try again later.","Your location is still not fetched from the browser yet.\nPlease try again later.","Your location is fetching from the browser.\nPlease try again later.")
+      getGeoLocation();
       function getAPIKey() {
         var key = document.getElementById("APIKey").value;
         var element = document.createElement("script");
@@ -29,16 +35,51 @@
         element.setAttribute("src","https://maps.googleapis.com/maps/api/js?key=" + key + "&callback=initMap");
         document.body.appendChild(element);
       }
-      function returnPosition(position){
+      function getGeoLocation() {
+        if (navigator.geolocation){
+            navigator.geolocation.getCurrentPosition(returnPosition,exceptipn);
+        } else {
+            err = "Geolocation is not supported by this browser.";
+            setLocation = {lat: 25.0846814, lng: 121.5455938};
+        }
+      }
+      function returnPosition(position) {
         setLocation["lat"] = position.coords.latitude;
         setLocation["lng"] = position.coords.longitude;
       }
-      function exceptipn(error){
+      function exceptipn(error) {
         setLocation = {lat: 25.0846814, lng: 121.5455938};
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            err = "You denied the request for Geolocation.";
+              break;
+          case error.POSITION_UNAVAILABLE:
+            err = "Your information of location is unavailable.";
+              break;
+          case error.TIMEOUT:
+            err = "The request to get your location timed out.";
+              break;
+          case error.UNKNOWN_ERROR:
+            err = "An unknown error occurred.";
+              break;
+        }
       }
       var setLocation = {};
       function initMap() {
         var location = setLocation;
+        if (JSON.stringify(setLocation) == '{}'){
+            err = errRandom[Math.floor(Math.random()*errRandom.length)];
+            location = {lat: 25.0846814, lng: 121.5455938};
+        }
+        if ((location["lat"] != 25.0846814) || (location["lng"] != 121.5455938)){
+            err = "";
+        }
+        if (err != ""){
+            alert(err);
+            if ((err != "Your location is still not fetched from the browser.\nPlease try again later.") && (err != "Your location is still not fetched from the browser yet.\nPlease try again later.") && (err != "Your location is fetching from the browser.\nPlease try again later.")){
+                err = "";
+            }
+        }
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 16,
           center: location
