@@ -67,7 +67,7 @@
         function initMap() {
             var location = setLocation;
             if (JSON.stringify(setLocation) == '{}'){
-                err = "Your location is still not fetched from the browser.\nPlease try again later.";
+                err = "Your location is fetching from the browser.\nPlease try again later.";
                 location = {lat: 25.0846814, lng: 121.5455938};
             }
             if ((location["lat"] != 25.0846814) || (location["lng"] != 121.5455938)){
@@ -75,17 +75,17 @@
             }
             if (err != ""){
                 alert(err);
-                if (err != "Your location is still not fetched from the browser.\nPlease try again later."){
+                if (err != "Your location is fetching from the browser.\nPlease try again later."){
                     err = "";
                 }
             }
             var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 16,
-            center: location
+                zoom: 16,
+                center: location
             });
             var marker = new google.maps.Marker({
-            position: location,
-            map: map
+                position: location,
+                map: map
             });
         }
         </script>
